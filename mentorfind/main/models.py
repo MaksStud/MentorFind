@@ -9,7 +9,7 @@ class CustomUser(AbstractUser):
     """
 
     ROLE_CHOICES = [
-        ("tutor", 'Репетитор'),
-        ("student", 'Учень'),
+        ("tutor", 'Tutor'),
+        ("student", 'Student'),
     ]
     role = models.CharField(choices=ROLE_CHOICES, max_length=20)
