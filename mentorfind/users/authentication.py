@@ -36,8 +36,12 @@ class LoginView(generics.GenericAPIView):
     serializer_class = CustomUserSerializer
 
     def post(self, request, *args, **kwargs):
-        username = request.data.get('username')
-        password = request.data.get('password')
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)  # This line will trigger validation
+
+        username = serializer.validated_data.get('username')
+        password = serializer.validated_data.get('password')
+
         user = authenticate(request, username=username, password=password)
         if user:
             token, _ = Token.objects.get_or_create(user=user)
