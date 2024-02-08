@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'main',
+    'users',
     'rest_framework',
     'rest_framework.authtoken',
     'django.contrib.admin',
@@ -102,7 +102,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = "main.CustomUser"
+AUTH_USER_MODEL = "users.CustomUser"
 
 
 # Internationalization
