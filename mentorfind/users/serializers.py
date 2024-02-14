@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import CustomUser
-from django.core.validators import MinLengthValidator 
+from django.core.validators import MinLengthValidator, EmailValidator
 from rest_framework.validators import UniqueValidator
 from .validators import uppercase_letter_validation
 
@@ -39,17 +39,16 @@ class CustomUserSerializerRegister(serializers.ModelSerializer):
 
     email = serializers.CharField(
         validators=[
-            UniqueValidator(queryset=CustomUser.objects.all())
+            UniqueValidator(queryset=CustomUser.objects.all()),
+            EmailValidator()
         ]
     )
 
     password = serializers.CharField(
         validators=[
             MinLengthValidator(8),
-            UniqueValidator(queryset=CustomUser.objects.all()),
         ]
     )
-
 
     class Meta:
         model = CustomUser
