@@ -11,12 +11,11 @@ class CustomUserSerializerLogin(serializers.ModelSerializer):
     """
     username = serializers.CharField(
         validators=[
-            MinLengthValidator(5)
         ]
     )
     password = serializers.CharField(
         validators=[
-            MinLengthValidator(5), 
+            MinLengthValidator(8), 
             uppercase_letter_validation
         ]
     )
@@ -47,6 +46,7 @@ class CustomUserSerializerRegister(serializers.ModelSerializer):
     password = serializers.CharField(
         validators=[
             MinLengthValidator(8),
+            uppercase_letter_validation
         ]
     )
 
