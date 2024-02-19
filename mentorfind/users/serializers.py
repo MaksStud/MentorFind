@@ -7,7 +7,7 @@ from .validators import uppercase_letter_validation
 
 class CustomUserSerializerLogin(serializers.ModelSerializer):
     """
-        Serializer for the CustomUser model
+        Serializer for the login
     """
     username = serializers.CharField(
         validators=[
@@ -15,8 +15,7 @@ class CustomUserSerializerLogin(serializers.ModelSerializer):
     )
     password = serializers.CharField(
         validators=[
-            MinLengthValidator(8), 
-            uppercase_letter_validation
+            
         ]
     )
 
@@ -28,7 +27,7 @@ class CustomUserSerializerLogin(serializers.ModelSerializer):
 
 class CustomUserSerializerRegister(serializers.ModelSerializer):
     """
-        Serializer for the CustomUser model
+        Serializer for the registration
     """
     username = serializers.CharField(
         validators=[
