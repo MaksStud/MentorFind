@@ -2,6 +2,7 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
+from mentorfind.backends import EmailBackend
 from .serializers import CustomUserSerializerLogin, CustomUserSerializerRegister
 from .models import CustomUser
 
@@ -41,8 +42,11 @@ class LoginView(generics.GenericAPIView):
 
         username = serializer.validated_data.get('username')
         password = serializer.validated_data.get('password')
+        email = serializer.validated_data.get('email')
 
         user = authenticate(request, username=username, password=password)
+        if not user:
+            user = EmailBackend().authenticate(request, email=email, password=password)
         if user:
             token, _ = Token.objects.get_or_create(user=user)
             return Response({'token': token.key}, status=status.HTTP_200_OK)

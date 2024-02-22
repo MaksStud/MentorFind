@@ -10,6 +10,7 @@ class CustomUserSerializerLogin(serializers.ModelSerializer):
         Serializer for the login
     """
     username = serializers.CharField(
+        required=False,
         validators=[
         ]
     )
