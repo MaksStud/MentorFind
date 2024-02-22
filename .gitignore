@@ -3,5 +3,3 @@
 *.pyc
 __pycache__/
 local_settings.py
-misc.xml
-MentorFind.iml
