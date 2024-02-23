@@ -1,7 +1,11 @@
 from rest_framework import serializers
 from .models import Advertisement
 
+
 class AdvertisementSerializer(serializers.ModelSerializer):
+    title = serializers.CharField(
+        required=True,
+    )
     class Meta:
         model = Advertisement
-        fields = '__all__'
+        fields = ('title', 'description', 'price', 'author')
