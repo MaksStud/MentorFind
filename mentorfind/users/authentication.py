@@ -2,7 +2,7 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
-from mentorfind.backends import EmailBackend
+from mentorfind.mentorfind.email_auth import EmailBackend
 from .serializers import CustomUserSerializerLogin, CustomUserSerializerRegister
 from .models import CustomUser
 
