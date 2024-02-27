@@ -108,7 +108,7 @@ AUTH_USER_MODEL = "users.CustomUser"
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend', # Для підтримки стандартного входу
-    'mentorfind.backends.EmailBackend', # Для підтримки входу чере емейл
+    'mentorfind.email_auth.EmailBackend', # Для підтримки входу чере емейл
 ]
 
 
