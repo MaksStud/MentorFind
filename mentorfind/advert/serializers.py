@@ -6,6 +6,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
     title = serializers.CharField(
         required=True,
     )
+
     class Meta:
         model = Advertisement
-        fields = ('title', 'description', 'price', 'author')
+        fields = ('title', 'category', 'price', 'image', 'author', 'location', 'type_of_lesson')
