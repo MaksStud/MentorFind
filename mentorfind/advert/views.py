@@ -27,8 +27,10 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    #GET-запити на шлях advert/a/?q=запит, де "запит" є пошуковим запитом.
     def list(self, request, *args, **kwargs):
+        '''GET-запити на шлях /advert/a/?p=запит&t=запит, де "запит"
+        є пошуковим запитом, познчання t c l d p є параментрами для
+        пошуку їх можна не передавати і розміщувати в любому порядку'''
         queryset = self.filter_queryset(self.get_queryset())
         title_query = self.request.query_params.get('t', None)
         category_query = self.request.query_params.get('c', None)
