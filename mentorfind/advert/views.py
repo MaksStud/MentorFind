@@ -17,6 +17,7 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
+        print(request.data)
         if serializer.is_valid():
             advert = serializer.save()
             if advert:
@@ -26,7 +27,7 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    #GET-запити на шлях api/advertisements/?q=запит, де "запит" є пошуковим запитом.
+    #GET-запити на шлях advert/a/?q=запит, де "запит" є пошуковим запитом.
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
         query = self.request.query_params.get('q', None)
