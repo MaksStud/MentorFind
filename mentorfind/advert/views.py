@@ -30,9 +30,24 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
     #GET-запити на шлях advert/a/?q=запит, де "запит" є пошуковим запитом.
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
-        query = self.request.query_params.get('q', None)
-        if query:
-            queryset = queryset.filter( Q(title__icontains=query) )
+        title_query = self.request.query_params.get('t', None)
+        category_query = self.request.query_params.get('c', None)
+        location_query = self.request.query_params.get('l', None)
+        description_query = self.request.query_params.get('d', None)
+        price_query = self.request.query_params.get('p', None)
+
+        if title_query:
+            queryset = queryset.filter(title__icontains=title_query)
+        if category_query:
+            queryset = queryset.filter(category__icontains=category_query)
+        if location_query:
+            queryset = queryset.filter(location__icontains=location_query)
+        if description_query:
+            queryset = queryset.filter(description__icontains=description_query)
+        if price_query:
+            queryset = queryset.filter(price__icontains=price_query)
+
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
 

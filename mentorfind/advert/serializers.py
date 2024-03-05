@@ -9,4 +9,4 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Advertisement
-        fields = ('title', 'category', 'price', 'image', 'author', 'location', 'type_of_lesson')
+        fields = ('title', 'category', 'description', 'price', 'image', 'author', 'location', 'type_of_lesson')
