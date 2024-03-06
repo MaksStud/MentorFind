@@ -17,7 +17,6 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        print(request.data)
         if serializer.is_valid():
             advert = serializer.save()
             if advert:
@@ -28,26 +27,23 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def list(self, request, *args, **kwargs):
-        '''GET-запити на шлях /advert/a/?p=запит&t=запит, де "запит"
-        є пошуковим запитом, познчання t c l d p є параментрами для
-        пошуку їх можна не передавати і розміщувати в любому порядку'''
+        '''GET requests to the path /advert/adding-and-searching/?p=query&t=query,
+        where "query" is a search query, the t c l d p notation is a search parameter,
+        they can be omitted and placed in any order search, they can be omitted and
+        placed in any order'''
         queryset = self.filter_queryset(self.get_queryset())
-        title_query = self.request.query_params.get('t', None)
-        category_query = self.request.query_params.get('c', None)
-        location_query = self.request.query_params.get('l', None)
-        description_query = self.request.query_params.get('d', None)
-        price_query = self.request.query_params.get('p', None)
 
-        if title_query:
-            queryset = queryset.filter(title__icontains=title_query)
-        if category_query:
-            queryset = queryset.filter(category__icontains=category_query)
-        if location_query:
-            queryset = queryset.filter(location__icontains=location_query)
-        if description_query:
-            queryset = queryset.filter(description__icontains=description_query)
-        if price_query:
-            queryset = queryset.filter(price__icontains=price_query)
+        query_params = {
+            'title__icontains': self.request.query_params.get('t', None),
+            'category__icontains': self.request.query_params.get('c', None),
+            'location__icontains': self.request.query_params.get('l', None),
+            'description__icontains': self.request.query_params.get('d', None),
+            'price__icontains': self.request.query_params.get('p', None)
+        }
+
+        for field, value in query_params.items():
+            if value:
+                queryset = queryset.filter(**{field: value})
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
