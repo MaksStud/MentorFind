@@ -5,5 +5,5 @@ from .views import AdvertisementViewSet
 
 
 urlpatterns = [
-    path('new_advert/', AdvertisementViewSet.as_view({'post': 'create'},), name="new_advert"),
+    path('adding-and-searching/', AdvertisementViewSet.as_view({'post': 'create', 'get': 'list'}), name="adding-and-searching"),
 ]
