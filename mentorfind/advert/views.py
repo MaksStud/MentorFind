@@ -3,9 +3,8 @@ from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from django.db.models import Q
-from .models import Advertisement
-from .serializers import AdvertisementSerializer
+from .models import Advertisement, Review
+from .serializers import AdvertisementSerializer, ReviewSerializer
 
 class AdvertisementViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
@@ -13,7 +12,6 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
 
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
-
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -48,4 +46,35 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            review = serializer.save()
+            if review:
+                review.save()
+                return Response(status=status.HTTP_201_CREATED)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        query_params = {
+            'author': self.request.query_params.get('a', None),
+            'rating__lte': self.request.query_params.get('r', None)
+        }
+
+        for field, value in query_params.items():
+            if value:
+                queryset = queryset.filter(**{field: value})
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 

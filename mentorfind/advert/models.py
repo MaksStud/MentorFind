@@ -14,3 +14,11 @@ class Advertisement(models.Model):
     def __str__(self):
         return self.title
 
+
+class Review(models.Model):
+    advertisement = models.ForeignKey(Advertisement, on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    text = models.TextField()
+    rating = models.PositiveIntegerField(default=5)  # Оцінка від 1 до 5
+    def __str__(self):
+        return f"Review for {self.advertisement.title} by {self.author}"
