@@ -1,4 +1,3 @@
-# views.py
 from rest_framework import status, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -36,7 +35,8 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
             'category__icontains': self.request.query_params.get('c', None),
             'location__icontains': self.request.query_params.get('l', None),
             'description__icontains': self.request.query_params.get('d', None),
-            'price__icontains': self.request.query_params.get('p', None)
+            'price__gte': self.request.query_params.get('p-gte', None), # >=
+            'price__lte': self.request.query_params.get('св ', None) # <=
         }
 
         for field, value in query_params.items():
@@ -68,7 +68,8 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
         query_params = {
             'author': self.request.query_params.get('a', None),
-            'rating__lte': self.request.query_params.get('r', None)
+            'rating__lte': self.request.query_params.get('r-lte', None),
+            'rating__gte': self.request.query_params.get('r-gte', None)
         }
 
         for field, value in query_params.items():
