@@ -5,3 +5,6 @@ __pycache__/
 local_settings.py
 .idea/
 db.sqlite3
+mentorfind/advert/migrations/
+mentorfind/users/migrations/
+mentorfind/main/migrations/

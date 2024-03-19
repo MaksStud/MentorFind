@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Advertisement, Review
 from .serializers import AdvertisementSerializer, ReviewSerializer
+from django.db.models import Q
 
 class AdvertisementViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
@@ -35,16 +36,23 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
             'category__icontains': self.request.query_params.get('c', None),
             'location__icontains': self.request.query_params.get('l', None),
             'description__icontains': self.request.query_params.get('d', None),
-            'price__gte': self.request.query_params.get('p-gte', None), # >=
-            'price__lte': self.request.query_params.get('св ', None) # <=
+            'price': self.request.query_params.get('p', None),
+            'price__gte': self.request.query_params.get('p-gte', None),  # >=
+            'price__lte': self.request.query_params.get('p-lte', None)  # <=
         }
 
+        # The "or" operation for search parameters
+        query = Q()
         for field, value in query_params.items():
             if value:
-                queryset = queryset.filter(**{field: value})
+                query |= Q(**{field: value})
+
+        # Filter the queryset if at least one parameter matches
+        queryset = queryset.filter(query)
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
 
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()

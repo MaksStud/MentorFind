@@ -1,15 +1,20 @@
 from rest_framework import serializers
 from .models import Advertisement, Review
+from django.db.models import Avg
 
 
 class AdvertisementSerializer(serializers.ModelSerializer):
-    title = serializers.CharField(
-        required=True,
-    )
+    average_rating = serializers.SerializerMethodField()
+
+    title = serializers.CharField(required=True)
 
     class Meta:
         model = Advertisement
-        fields = ('id', 'title', 'category', 'description', 'price', 'image', 'author', 'location', 'type_of_lesson')
+        fields = ['id', 'title', 'category', 'price', 'description', 'image', 'author', 'location', 'type_of_lesson', 'average_rating']
+        read_only_fields = ['id', 'type_of_lesson']
+
+    def get_average_rating(self, obj):
+        return obj.review_set.aggregate(Avg('rating'))['rating__avg']
 
 
 class ReviewSerializer(serializers.ModelSerializer):
