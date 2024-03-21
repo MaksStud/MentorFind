@@ -10,6 +10,7 @@ class Advertisement(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     location = models.CharField(max_length=100, default=None)
     type_of_lesson = models.BooleanField(default=None)
+    rating = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return self.title
