@@ -11,7 +11,7 @@ class AdvertisementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Advertisement
         fields = ['id', 'title', 'category', 'price', 'description', 'image', 'author', 'location', 'type_of_lesson', 'average_rating']
-        read_only_fields = ['id', 'type_of_lesson']
+        read_only_fields = ['id', 'average_rating']
 
     def get_average_rating(self, obj):
         return obj.review_set.aggregate(Avg('rating'))['rating__avg']
