@@ -5,6 +5,9 @@ from rest_framework.response import Response
 from .models import Advertisement, Review
 from .serializers import AdvertisementSerializer, ReviewSerializer
 from django.db.models import Q
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
+
 
 class AdvertisementViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
@@ -14,15 +17,25 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
     serializer_class = AdvertisementSerializer
 
     def create(self, request, *args, **kwargs):
+        token_key = request.META.get('HTTP_AUTHORIZATION').split(' ')[1]
+
+        try:
+            token = Token.objects.get(key=token_key)
+            user = token.user
+        except Token.DoesNotExist:
+            user = User.objects.create_user(username="anonymous")
+
+        # Додаємо автора оголошення до данних запиту перед створенням серіалізатора
+        request.data['author'] = user.pk
+
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             advert = serializer.save()
             if advert:
                 advert.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-                return Response(status=status.HTTP_201_CREATED)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def list(self, request, *args, **kwargs):
         '''GET requests to the path /advert/adding-and-searching/?p=query&t=query,
