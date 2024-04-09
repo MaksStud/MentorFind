@@ -55,3 +55,9 @@ class CustomUserSerializerRegister(serializers.ModelSerializer):
         model = CustomUser
         fields = ('username', 'email', 'password')
         extra_kwargs = {'password': {'write_only': True}}
+
+
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'email']
