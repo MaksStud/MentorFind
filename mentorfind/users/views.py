@@ -33,6 +33,9 @@ class CustomUserEditViewSet(RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
 
     def update(self, request, *args, **kwargs):
+        '''
+        Go to /users/edit/id/ where id is an integer
+        '''
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
