@@ -2,18 +2,13 @@ from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .serializers import CustomUserSerializerLogin
-from django.db.models import Q
+from .serializers import CustomUserSerializer
 from .models import CustomUser
 
 
-
 class CustomUserViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    A simple ViewSet for viewing users.
-    """
     queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializerLogin
+    serializer_class = CustomUserSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
