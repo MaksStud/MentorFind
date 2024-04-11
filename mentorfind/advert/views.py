@@ -104,8 +104,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
 class AdvertisementGetByIdViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializerGetById
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()

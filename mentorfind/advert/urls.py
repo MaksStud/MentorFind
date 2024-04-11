@@ -7,6 +7,6 @@ from .views import AdvertisementViewSet, ReviewViewSet, AdvertisementGetByIdView
 urlpatterns = [
     path('adding-and-searching/', AdvertisementViewSet.as_view({'post': 'create', 'get': 'list'}), name='adding-and-searching'),
     path('review/', ReviewViewSet.as_view({'post': 'create', 'get': 'list'}), name='review'),
-    path('getById/<int:pk>/', AdvertisementGetByIdViewSet.as_view({'get': 'retrieve'}), name='getById'),
+    path('get/<int:pk>/', AdvertisementGetByIdViewSet.as_view({'get': 'retrieve'}), name='getById'),
 
 ]
