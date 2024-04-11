@@ -3,7 +3,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Advertisement, Review
-from .serializers import AdvertisementSerializer, ReviewSerializer, AdvertisementSerializerEdit
+from .serializers import AdvertisementSerializer, ReviewSerializer, AdvertisementSerializerGetById, AdvertisementSerializerEdit
 from django.db.models import Q
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
@@ -102,6 +102,15 @@ class ReviewViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
+
+class AdvertisementGetByIdViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Advertisement.objects.all()
+    serializer_class = AdvertisementSerializerGetById
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
 class AdvertisementEditViewSet(RetrieveUpdateAPIView):
     queryset = Advertisement.objects.all()
