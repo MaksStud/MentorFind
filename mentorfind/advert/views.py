@@ -3,10 +3,12 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Advertisement, Review
-from .serializers import AdvertisementSerializer, ReviewSerializer, AdvertisementSerializerGetById
+from .serializers import AdvertisementSerializer, ReviewSerializer, AdvertisementSerializerGetById, AdvertisementSerializerEdit
 from django.db.models import Q
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
+from rest_framework.generics import RetrieveUpdateAPIView
+
 
 
 class AdvertisementViewSet(viewsets.ModelViewSet):
@@ -109,3 +111,20 @@ class AdvertisementGetByIdViewSet(viewsets.ReadOnlyModelViewSet):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
+
+class AdvertisementEditViewSet(RetrieveUpdateAPIView):
+    queryset = Advertisement.objects.all()
+    serializer_class = AdvertisementSerializerEdit
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def update(self, request, *args, **kwargs):
+        '''
+        Go to /advert/edit/id/ where id is an integer
+        '''
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
