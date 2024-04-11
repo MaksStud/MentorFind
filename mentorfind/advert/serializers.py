@@ -20,11 +20,11 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 class AdvertisementSerializerEdit(serializers.ModelSerializer):
     title = serializers.CharField(required=False)
     category = serializers.CharField(required=False)
-    price = serializers.CharField(required=False)
+    price = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
     description = serializers.CharField(required=False)
-    image = serializers.CharField(required=False)
+    image = serializers.ImageField(required=False)
     location = serializers.CharField(required=False)
-    type_of_lesson = serializers.CharField(required=False)
+    type_of_lesson = serializers.BooleanField(required=False)
 
     class Meta:
         model = Advertisement
