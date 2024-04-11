@@ -17,6 +17,20 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         return obj.review_set.aggregate(Avg('rating'))['rating__avg']
 
 
+class AdvertisementSerializerEdit(serializers.ModelSerializer):
+    title = serializers.CharField(required=False)
+    category = serializers.CharField(required=False)
+    price = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+    description = serializers.CharField(required=False)
+    image = serializers.ImageField(required=False)
+    location = serializers.CharField(required=False)
+    type_of_lesson = serializers.BooleanField(required=False)
+
+    class Meta:
+        model = Advertisement
+        fields = ['title', 'category', 'price', 'description', 'image', 'location', 'type_of_lesson']
+
+
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
