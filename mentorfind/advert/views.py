@@ -77,6 +77,17 @@ class ReviewViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
+        token_key = request.META.get('HTTP_AUTHORIZATION').split(' ')[1]
+
+        try:
+            token = Token.objects.get(key=token_key)
+            user = token.user
+        except Token.DoesNotExist:
+            user = User.objects.create_user(username="anonymous")
+
+        # Додаємо автора оголошення до данних запиту перед створенням серіалізатора
+        request.data['author'] = user.pk
+
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             review = serializer.save()
