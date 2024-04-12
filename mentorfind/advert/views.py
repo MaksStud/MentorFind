@@ -8,7 +8,7 @@ from django.db.models import Q
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from rest_framework.generics import RetrieveUpdateAPIView
-
+from rest_framework.views import APIView
 
 
 class AdvertisementViewSet(viewsets.ModelViewSet):
@@ -128,3 +128,11 @@ class AdvertisementEditViewSet(RetrieveUpdateAPIView):
         serializer.save()
         return Response(serializer.data)
 
+
+class ReviewByAdvertisementAPIView(APIView):
+    '''Refer to the address advert/review-by-advertisement/id/
+    where id is an integer that is the id of the advertisement '''
+    def get(self, request, advertisement_id):
+        reviews = Review.objects.filter(advertisement_id=advertisement_id)
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data)
