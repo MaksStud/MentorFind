@@ -19,13 +19,17 @@ class AdvertisementSerializer(serializers.ModelSerializer):
 
 class AdvertisementSerializerGetById(serializers.ModelSerializer):
     average_rating = serializers.SerializerMethodField()
+    author_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Advertisement
-        fields = ['title', 'category', 'price', 'description', 'image', 'author', 'location', 'type_of_lesson', 'average_rating']
+        fields = ['title', 'category', 'price', 'description', 'image', 'author', 'author_name', 'location', 'type_of_lesson', 'average_rating']
 
     def get_average_rating(self, obj):
         return obj.review_set.aggregate(Avg('rating'))['rating__avg']
+
+    def get_author_name(self, obj):
+        return obj.author.username if obj.author else None
 
 class AdvertisementSerializerEdit(serializers.ModelSerializer):
     title = serializers.CharField(required=False)
