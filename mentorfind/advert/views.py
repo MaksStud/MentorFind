@@ -102,8 +102,8 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
         query_params = {
             'author': self.request.query_params.get('a', None),
-            'rating__lte': self.request.query_params.get('r-lte', None),
-            'rating__gte': self.request.query_params.get('r-gte', None)
+            'rating__lte': self.request.query_params.get('r-lte', None), #<=
+            'rating__gte': self.request.query_params.get('r-gte', None) #>=
         }
 
         for field, value in query_params.items():
