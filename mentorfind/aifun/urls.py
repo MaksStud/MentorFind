@@ -1,6 +1,8 @@
 from django.urls import path
-from .views import TaskResponseViewSet
+from .views import TextGenerationViewSet, ImageGenerationViewSet
 
 urlpatterns = [
-    path('get/', TaskResponseViewSet.as_view({'get': 'retrieve'}), name='get'),
+    path('getText/', TextGenerationViewSet.as_view({'get': 'retrieve'}), name='getTest'),
+    path('getPhoto/', ImageGenerationViewSet.as_view({'get': 'retrieve'}), name='getPhoto'),
+
 ]
