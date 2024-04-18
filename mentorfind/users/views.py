@@ -11,8 +11,6 @@ from rest_framework.generics import RetrieveUpdateAPIView
 class CustomUserReadViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializerRead
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
 
     def retrieve(self, request, *args, **kwargs):
         '''
