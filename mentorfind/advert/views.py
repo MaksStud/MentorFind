@@ -8,7 +8,7 @@ from django.db.models import Q
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from rest_framework.generics import RetrieveUpdateAPIView
-
+from rest_framework.views import APIView
 
 
 class AdvertisementViewSet(viewsets.ModelViewSet):
@@ -77,6 +77,17 @@ class ReviewViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
+        token_key = request.META.get('HTTP_AUTHORIZATION').split(' ')[1]
+
+        try:
+            token = Token.objects.get(key=token_key)
+            user = token.user
+        except Token.DoesNotExist:
+            user = User.objects.create_user(username="anonymous")
+
+        # Додаємо автора оголошення до данних запиту перед створенням серіалізатора
+        request.data['author'] = user.pk
+
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             review = serializer.save()
@@ -91,8 +102,8 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
         query_params = {
             'author': self.request.query_params.get('a', None),
-            'rating__lte': self.request.query_params.get('r-lte', None),
-            'rating__gte': self.request.query_params.get('r-gte', None)
+            'rating__lte': self.request.query_params.get('r-lte', None), #<=
+            'rating__gte': self.request.query_params.get('r-gte', None) #>=
         }
 
         for field, value in query_params.items():
@@ -128,3 +139,11 @@ class AdvertisementEditViewSet(RetrieveUpdateAPIView):
         serializer.save()
         return Response(serializer.data)
 
+
+class ReviewByAdvertisementAPIView(APIView):
+    '''Refer to the address advert/review-by-advertisement/id/
+    where id is an integer that is the id of the advertisement '''
+    def get(self, request, advertisement_id):
+        reviews = Review.objects.filter(advertisement_id=advertisement_id)
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data)
