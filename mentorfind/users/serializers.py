@@ -60,7 +60,7 @@ class CustomUserSerializerRegister(serializers.ModelSerializer):
 class CustomUserSerializerRead(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'email', 'review__rating']
+        fields = ['id', 'username', 'email']
 
 
 class CustomUserSerializerEdit(serializers.ModelSerializer):
