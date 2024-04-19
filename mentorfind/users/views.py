@@ -51,15 +51,15 @@ class TopUsersViewSet(viewsets.ViewSet):
     serializer_class = CustomUserTopSerializer
 
     def list(self, request):
-        # Отримати всіх користувачів разом з середньою оцінкою і кількістю їх оголошень
+        # Get all users along with the average rating and the number of their ads
         users_with_avg_rating_and_count = CustomUser.objects.annotate(
             avg_rating=Avg('review__rating'),
             advertisement_count=Count('advertisement')
         )
 
-        # Відсортуйте їх за середньою оцінкою, а потім за кількістю оголошень
+        # Sort them by average score and then by number of ads
         sorted_users = sorted(users_with_avg_rating_and_count, key=lambda x: (x.avg_rating if x.avg_rating is not None else -float('inf'), -x.advertisement_count), reverse=True)
 
-        # Серіалізувати відсортований список користувачів і повернути його
+        # Serialize the sorted list of users and return it
         serializer = self.serializer_class(sorted_users, many=True)
         return Response(serializer.data)
