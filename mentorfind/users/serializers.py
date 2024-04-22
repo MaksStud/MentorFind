@@ -71,3 +71,12 @@ class CustomUserSerializerEdit(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['username', 'email', 'password']
+
+
+class CustomUserTopSerializer(serializers.ModelSerializer):
+    avg_rating = serializers.FloatField()
+    advertisement_count = serializers.IntegerField()
+
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'avg_rating', 'advertisement_count']
