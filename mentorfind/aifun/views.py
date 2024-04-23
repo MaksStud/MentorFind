@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from g4f.client import Client
 import g4f
@@ -34,6 +34,6 @@ class ImageGenerationViewSet(viewsets.ViewSet):
             image_url = response.data
             image_urls_list = [image.url for image in image_url]
         except g4f.errors.NoImageResponseError:
-            return Response({'error': 'No data'}, status=400)
+            return Response({'error': 'No data'}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response(image_urls_list)
+            return Response(image_urls_list, status=status.HTTP_200_OK)

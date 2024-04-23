@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django_filters',
     'users',
     'advert',
+    'viewhistory',
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
