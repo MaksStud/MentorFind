@@ -22,7 +22,6 @@ class ViewHistoryViewSet(viewsets.ModelViewSet):
         token = Token.objects.get(key=token_key)
         user = token.user
 
-
         request.data['user'] = user.pk
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
@@ -37,3 +36,8 @@ class ViewHistoryViewSet(viewsets.ModelViewSet):
         queryset = self.filter_queryset(self.get_queryset().filter(user=user))  # Фільтруємо за поточним користувачем
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_200_OK)
