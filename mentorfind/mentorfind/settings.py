@@ -32,10 +32,11 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'aifun',
-    'django_filters',
     'users',
     'advert',
+    'selected',
     'corsheaders',
+    'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
     'django.contrib.admin',
