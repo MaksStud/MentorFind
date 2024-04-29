@@ -18,6 +18,11 @@ class SelectedViewSet(viewsets.ModelViewSet):
         token_key = request.META.get('HTTP_AUTHORIZATION').split(' ')[1]
         token = Token.objects.get(key=token_key)
         user = token.user
+        advertisement_id = request.data.get('advertisement')
+
+        existing_selected = Selected.objects.filter(user=user, advertisement_id=advertisement_id).exists()
+        if existing_selected:
+            return Response({'error': 'Це оголошення вже збережено користувачем'}, status=status.HTTP_403_FORBIDDEN)
 
         request.data['user'] = user.pk
         serializer = self.get_serializer(data=request.data)
