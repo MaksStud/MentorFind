@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from .models import ViewHistory
 from .serializers import ViewHistorySerializer
 from rest_framework.authtoken.models import Token
-from django.contrib.auth.models import User
-
+from django.conf import settings
+from django.templatetags.static import static
 
 
 
@@ -41,3 +41,26 @@ class ViewHistoryViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_200_OK)
+
+    def get_for_author(self, request):
+        user = request.user
+        selected_ads = ViewHistory.objects.filter(user=user)
+        ad_data = []
+        for selected_ad in selected_ads:
+            ad = selected_ad.advertisement
+            ad_info = {
+                'id': ad.id,
+                'title': ad.title,
+                'category': ad.category,
+                'price': ad.price,
+                'description': ad.description,
+                'author': ad.author.id,
+                'location': ad.location,
+                'type_of_lesson': ad.type_of_lesson,
+            }
+            if ad.image:  # Check if the image exists
+                ad_info['image'] = request.build_absolute_uri(ad.image.url)
+            else:
+                ad_info['image'] = static(settings.DEFAULT_AD_IMAGE)  # Provide a default image URL
+            ad_data.append(ad_info)
+        return Response(ad_data, status=status.HTTP_200_OK)
