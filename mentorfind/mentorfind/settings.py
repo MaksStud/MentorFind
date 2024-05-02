@@ -153,3 +153,5 @@ import os
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR)
+
+DEFAULT_AD_IMAGE = "C:\Work\MentorFind\mentorfind\image\default_ad_image.png"
