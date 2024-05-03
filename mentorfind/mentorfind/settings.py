@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django_filters',
     'users',
     'advert',
+    'viewhistory',
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
@@ -152,3 +153,5 @@ import os
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR)
+
+DEFAULT_AD_IMAGE = 'static_images/default_ad_image.png'

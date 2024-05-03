@@ -25,5 +25,6 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('advert/', include('advert.urls')),
     path('ai/', include('aifun.urls')),
+    path('viewhistory/', include('viewhistory.urls')),
     path('', include('main.urls'))
 ] + static(MEDIA_URL, document_root=MEDIA_ROOT)
