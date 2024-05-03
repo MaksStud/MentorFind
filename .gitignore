@@ -8,4 +8,6 @@ db.sqlite3
 mentorfind/advert/migrations/
 mentorfind/users/migrations/
 mentorfind/main/migrations/
+mentorfind/viewhistory/migrations
+mentorfind/selected/migrations
 image/

@@ -2,14 +2,12 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from .serializers import (CustomUserSerializerRead,
                           CustomUserSerializerEdit,
-                          CustomUserSerializerLogin,
                           CustomUserTopSerializer)
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework import viewsets
 from rest_framework.response import Response
 from .models import CustomUser
 from django.db.models import Avg, Count
-
 
 
 class CustomUserReadViewSet(viewsets.ReadOnlyModelViewSet):
