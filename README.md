@@ -1,5 +1,5 @@
-## Запуск Проєкту 
-в temrinal вводимо команду "cd mentorfind" для передожу в папку mentorfind
+## Starting the Project 
+in terminal, enter the command "cd mentorfind" to move to the mentorfind folder
 
-після успішного виконання 
-в той самий temrinal вводимо команду "python manage.py runserver"
+after successful execution 
+in the same ter,inal we enter the command “python manage.py runserver”
