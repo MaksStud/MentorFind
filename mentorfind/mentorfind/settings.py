@@ -32,11 +32,12 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'aifun',
-    'django_filters',
     'users',
     'advert',
+    'selected',
     'viewhistory',
     'corsheaders',
+    'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
     'django.contrib.admin',
@@ -155,3 +156,4 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR)
 
 DEFAULT_AD_IMAGE = 'static_images/default_ad_image.png'
+

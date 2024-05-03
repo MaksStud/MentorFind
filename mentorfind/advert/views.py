@@ -9,6 +9,7 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.views import APIView
+from rest_framework import permissions
 
 
 class AdvertisementViewSet(viewsets.ModelViewSet):
@@ -147,3 +148,15 @@ class ReviewByAdvertisementAPIView(APIView):
         reviews = Review.objects.filter(advertisement_id=advertisement_id)
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
+
+
+class GiveAllUserAdsAway(viewsets.ModelViewSet):
+    serializer_class = AdvertisementSerializer
+    permission_classes = [permissions.IsAuthenticated]  # Перевірка, чи користувач аутентифікований
+
+    def get_queryset(self):
+        user = self.request.user
+        return Advertisement.objects.filter(author=user)
+
+
+
