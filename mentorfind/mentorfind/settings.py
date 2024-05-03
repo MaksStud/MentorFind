@@ -154,4 +154,4 @@ import os
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR)
 
-DEFAULT_AD_IMAGE = '\image\default_ad_image.png'
+DEFAULT_AD_IMAGE = 'static_images/default_ad_image.png'
