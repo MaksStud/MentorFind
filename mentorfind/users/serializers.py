@@ -43,9 +43,9 @@ class CustomUserSerializerRead(serializers.ModelSerializer):
 
 
 class CustomUserSerializerEdit(serializers.ModelSerializer):
-    username = serializers.CharField(required=False)
-    password = serializers.CharField(required=False)
-    email = serializers.CharField(required=False)
+    username = serializers.CharField(required=False, validators=[UniqueValidator(queryset=CustomUser.objects.all())])
+    password = serializers.CharField(validators=[MinLengthValidator(8), uppercase_letter_validation], required=False)
+    email = serializers.CharField(required=False, validators=[UniqueValidator(queryset=CustomUser.objects.all()), EmailValidator()])
     photo = serializers.ImageField(required=False, source='user_photos/')
 
     class Meta:
