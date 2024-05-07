@@ -12,7 +12,7 @@ class CustomUserSerializerLogin(serializers.ModelSerializer):
     """
     username = serializers.CharField(required=False, validators=[])
     password = serializers.CharField(validators=[])
-    photo = serializers.ImageField('user_photos/', read_only=True)
+    photo = serializers.ImageField(source='user_photos/', read_only=True)
 
     class Meta:
         model = CustomUser
