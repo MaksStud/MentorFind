@@ -44,6 +44,8 @@ class CustomUserEditViewSet(RetrieveUpdateAPIView):
                             status=status.HTTP_400_BAD_REQUEST)
 
         serializer = self.get_serializer(user, data=request.data)
+        new_username = request.data.get("username", None)
+        new_email = request.data.get("email", None)
         serializer.is_valid(raise_exception=True)
 
         current_password = request.data.get("current_password", None)
@@ -53,12 +55,17 @@ class CustomUserEditViewSet(RetrieveUpdateAPIView):
         if not user.check_password(current_password):
             return Response({"detail": "Incorrect old password."}, status=status.HTTP_400_BAD_REQUEST)
 
+        if new_username is not None:
+            user.username = new_username
+
+        if new_email is not None:
+            user.email = new_email
+
         new_password = request.data.get("password", None)
         if new_password is not None:
             user.set_password(new_password)
-            user.save()
+        user.save()
         return Response(serializer.data)
-
 
 class TopUsersViewSet(viewsets.ViewSet):
     serializer_class = CustomUserTopSerializer

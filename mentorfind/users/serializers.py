@@ -28,7 +28,7 @@ class CustomUserSerializerRegister(serializers.ModelSerializer):
     username = serializers.CharField(validators=[UniqueValidator(queryset=CustomUser.objects.all())])
     email = serializers.CharField(validators=[UniqueValidator(queryset=CustomUser.objects.all()), EmailValidator()])
     password = serializers.CharField(validators=[MinLengthValidator(8), uppercase_letter_validation])
-    photo = serializers.ImageField(source='user_photos/', read_only=True)
+    photo = serializers.ImageField(source='user_photos/', required=False)
     class Meta:
         model = CustomUser
         fields = ('username', 'email', 'password', 'photo')
