@@ -12,11 +12,10 @@ class CustomUserSerializerLogin(serializers.ModelSerializer):
     """
     username = serializers.CharField(required=False, validators=[])
     password = serializers.CharField(validators=[])
-    photo = serializers.ImageField(source='user_photos/', read_only=True)
 
     class Meta:
         model = CustomUser
-        fields = ('id', 'username', 'email', 'password', 'photo')
+        fields = ('id', 'username', 'email', 'password')
         extra_kwargs = {'password': {'write_only': True}}
         read_only_fields = ['id', 'Token']
 
