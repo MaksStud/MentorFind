@@ -10,6 +10,8 @@ from django.contrib.auth.models import User
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.views import APIView
 from rest_framework import permissions
+from rest_framework.exceptions import PermissionDenied
+
 
 
 class AdvertisementViewSet(viewsets.ModelViewSet):
@@ -21,24 +23,15 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         token_key = request.META.get('HTTP_AUTHORIZATION').split(' ')[1]
+        token = Token.objects.get(key=token_key)
+        user = token.user
 
-        try:
-            token = Token.objects.get(key=token_key)
-            user = token.user
-        except Token.DoesNotExist:
-            user = User.objects.create_user(username="anonymous")
-
-        # Додаємо автора оголошення до данних запиту перед створенням серіалізатора
         request.data['author'] = user.pk
-
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            advert = serializer.save()
-            if advert:
-                advert.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
     def list(self, request, *args, **kwargs):
         '''GET requests to the path /advert/adding-and-searching/?p=query&t=query,
@@ -137,6 +130,12 @@ class AdvertisementEditViewSet(RetrieveUpdateAPIView):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
+
+        user = request.user
+        if instance.author != user:
+            return Response({'error': 'User is not authorized for this advert'},
+                            status=status.HTTP_403_FORBIDDEN)
+
         serializer.save()
         return Response(serializer.data)
 
@@ -144,7 +143,7 @@ class AdvertisementEditViewSet(RetrieveUpdateAPIView):
 class ReviewByAdvertisementAPIView(APIView):
     '''Refer to the address advert/review-by-advertisement/id/
     where id is an integer that is the id of the advertisement '''
-    def get(self, request, advertisement_id):
+    def get(self, advertisement_id):
         reviews = Review.objects.filter(advertisement_id=advertisement_id)
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)

@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 
+
 class Advertisement(models.Model):
     title = models.CharField(max_length=100)
     category = models.CharField(max_length=100, default=None)
