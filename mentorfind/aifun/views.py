@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from g4f.client import Client
 import g4f
 from googletrans import Translator
+import requests
+import base64
 
 
 class TextGenerationViewSet(viewsets.ViewSet):
@@ -36,4 +38,16 @@ class ImageGenerationViewSet(viewsets.ViewSet):
         except g4f.errors.NoImageResponseError:
             return Response({'error': 'No data'}, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response(image_urls_list, status=status.HTTP_200_OK)
+            file_list = []
+            for url in image_urls_list:
+                response = requests.get(url)
+                if response.status_code == 200:
+                    base64_encoded_data = base64.b64encode(response.content)
+                    base64_string = base64_encoded_data.decode('utf-8')
+                    data_uri = f'data:image/png;base64,{base64_string}'
+                    print(data_uri[:50])
+                    file_list.append(data_uri)
+                else: 
+                    return Response({'error': 'No data'}, status=status.HTTP_400_BAD_REQUEST)
+                
+            return Response(file_list, status=status.HTTP_200_OK)
