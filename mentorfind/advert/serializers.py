@@ -5,7 +5,6 @@ from django.db.models import Avg
 class AdvertisementSerializer(serializers.ModelSerializer):
     average_rating = serializers.SerializerMethodField()
     title = serializers.CharField(required=True)
-    image = serializers.ImageField(write_only=True, required=False)
 
     class Meta:
         model = Advertisement
