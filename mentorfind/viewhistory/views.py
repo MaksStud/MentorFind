@@ -3,7 +3,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import ViewHistory
-from .serializers import ViewHistorySerializer
+from .serializers import ViewHistorySerializer, ViewHistorySerializerWithAdvertisementData
 from rest_framework.authtoken.models import Token
 from django.conf import settings
 from django.templatetags.static import static
@@ -44,35 +44,26 @@ class ViewHistoryViewSet(viewsets.ModelViewSet):
         self.perform_destroy(instance)
         return Response(status=status.HTTP_200_OK)
 
-    def list(self, request, *args, **kwargs):
-        user = request.user
-        selected_ads = ViewHistory.objects.filter(user=user)
-        ad_data = []
-        for selected_ad in selected_ads:
-            ad = selected_ad.advertisement
-            ad_info = {
-                'id': selected_ad.id,
-                'timestamp': selected_ad.timestamp,
-                'user': selected_ad.user.id,
-                'ad': {'id': ad.id,
-                 'title': ad.title,
-                 'category': ad.category,
-                 'price': ad.price,
-                 'description': ad.description,
-                 'author': ad.author.id,
-                 'name': ad.author.username,
-                 'location': ad.location,
-                 'type_of_lesson': ad.type_of_lesson}
-            }
-            if ad.image:  # Check if the image exists
-                ad_info['ad']['image'] = request.build_absolute_uri(ad.image.url)
-            else:
-                ad_info['ad']['image'] = static(settings.DEFAULT_AD_IMAGE)  # Provide a default image URL
-            ad_data.append(ad_info)
-        return Response(ad_data, status=status.HTTP_200_OK)
 
     def delete_full_viewhistory(self, request, *args ,**kwargs):
         token_key = request.META.get('HTTP_AUTHORIZATION').split(' ')[1]
         user = Token.objects.get(key=token_key).user
         ViewHistory.objects.filter(user=user).delete()
         return Response({'message': 'All view history deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class ViewHistoryViewGet(viewsets.ModelViewSet):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    queryset = ViewHistory.objects.all()
+    serializer_class = ViewHistorySerializerWithAdvertisementData
+
+    def list(self, request, *args, **kwargs):
+        token_key = request.META.get('HTTP_AUTHORIZATION').split(' ')[1]
+        user = Token.objects.get(key=token_key).user
+
+        saved_view_history = ViewHistory.objects.filter(user=user)
+        serializer = self.get_serializer(saved_view_history, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)

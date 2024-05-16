@@ -1,29 +1,44 @@
 from rest_framework import serializers
 from .models import Advertisement, Review
 from django.db.models import Avg
+from selected.models import Selected
 
 class AdvertisementSerializer(serializers.ModelSerializer):
     average_rating = serializers.SerializerMethodField()
     title = serializers.CharField(required=True)
+    is_saved = serializers.SerializerMethodField()
 
     class Meta:
         model = Advertisement
-        fields = ['id', 'title', 'category', 'price', 'description', 'image',  'author', 'location', 'type_of_lesson', 'average_rating']
-        read_only_fields = ['id', 'average_rating']
+        fields = ['id', 'title', 'category', 'price', 'description', 'image',  'author', 'location', 'type_of_lesson', 'average_rating', 'is_saved']
+        read_only_fields = ['id', 'average_rating', 'is_saved']
 
     def get_average_rating(self, obj):
         return obj.review_set.aggregate(Avg('rating'))['rating__avg']
+
+    def get_is_saved(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return Selected.objects.filter(user=request.user, advertisement=obj).exists()
+        return False
 
 
 class AdvertisementSerializerGetById(serializers.ModelSerializer):
     average_rating = serializers.SerializerMethodField()
+    is_saved = serializers.SerializerMethodField()
 
     class Meta:
         model = Advertisement
-        fields = ['title', 'category', 'price', 'description', 'image', 'author', 'location', 'type_of_lesson', 'average_rating']
+        fields = ['title', 'category', 'price', 'description', 'image', 'author', 'location', 'type_of_lesson', 'average_rating', 'is_saved']
 
     def get_average_rating(self, obj):
         return obj.review_set.aggregate(Avg('rating'))['rating__avg']
+
+    def get_is_saved(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return Selected.objects.filter(user=request.user, advertisement=obj).exists()
+        return False
 
 
 class AdvertisementSerializerEdit(serializers.ModelSerializer):
