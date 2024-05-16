@@ -11,3 +11,4 @@ mentorfind/main/migrations/
 mentorfind/viewhistory/migrations
 mentorfind/selected/migrations
 image/
+user_photos/
