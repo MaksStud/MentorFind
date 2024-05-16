@@ -10,7 +10,7 @@ class Advertisement(models.Model):
     image = models.ImageField(upload_to='image/', null=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     location = models.CharField(max_length=100, default=None)
-    type_of_lesson = models.BooleanField(default=None)
+    type_of_lesson = models.CharField(max_length=20, default=None)
 
     def __str__(self):
         return self.title
