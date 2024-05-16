@@ -10,13 +10,14 @@ from django.contrib.auth.models import User
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.views import APIView
 from rest_framework import permissions
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
 
 
 
 class AdvertisementViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
