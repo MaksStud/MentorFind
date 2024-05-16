@@ -27,6 +27,18 @@ class CustomUserReadViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(serializer.data)
 
 
+class CustomUserReadViaTokenViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializerRead
+
+    def get(self, request, *args, **kwargs):
+        token = request.headers.get('Authorization').split(' ')[1]
+        token_obj = Token.objects.get(key=token)
+        user = token_obj.user
+        serializer = self.get_serializer(instance=user)
+        return Response(serializer.data)
+
+
 class CustomUserEditViewSet(RetrieveUpdateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializerEdit

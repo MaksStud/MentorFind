@@ -1,11 +1,12 @@
 from django.urls import path
 from .authentication import RegisterView, LoginView
-from .views import CustomUserReadViewSet, CustomUserEditViewSet, TopUsersViewSet
+from .views import CustomUserReadViewSet, CustomUserEditViewSet, TopUsersViewSet, CustomUserReadViaTokenViewSet
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', LoginView.as_view(), name='login'),
     path('get/<int:pk>/', CustomUserReadViewSet.as_view({'get': 'retrieve'}), name='get'),
+    path('getViaToken/', CustomUserReadViaTokenViewSet.as_view({'get': 'get'})),
     path('edit/', CustomUserEditViewSet.as_view(), name='edit'),
     path('top/', TopUsersViewSet.as_view({'get': 'list'}), name='top')
 ]
