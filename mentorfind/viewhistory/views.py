@@ -3,7 +3,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import ViewHistory
-from .serializers import ViewHistorySerializer
+from .serializers import ViewHistorySerializer, ViewHistorySerializerWithAdvertisementData
 from rest_framework.authtoken.models import Token
 from django.conf import settings
 from django.templatetags.static import static
@@ -38,14 +38,6 @@ class ViewHistoryViewSet(viewsets.ModelViewSet):
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def list(self, request, *args, **kwargs):
-        token_key = request.META.get('HTTP_AUTHORIZATION').split(' ')[1]
-        user = Token.objects.get(key=token_key).user
-
-        saved_view_history = ViewHistory.objects.filter(user=user)
-        serializer = self.get_serializer(saved_view_history, many=True)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -58,3 +50,20 @@ class ViewHistoryViewSet(viewsets.ModelViewSet):
         user = Token.objects.get(key=token_key).user
         ViewHistory.objects.filter(user=user).delete()
         return Response({'message': 'All view history deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+
+class ViewHistoryViewGet(viewsets.ModelViewSet):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    queryset = ViewHistory.objects.all()
+    serializer_class = ViewHistorySerializerWithAdvertisementData
+
+    def list(self, request, *args, **kwargs):
+        token_key = request.META.get('HTTP_AUTHORIZATION').split(' ')[1]
+        user = Token.objects.get(key=token_key).user
+
+        saved_view_history = ViewHistory.objects.filter(user=user)
+        serializer = self.get_serializer(saved_view_history, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
