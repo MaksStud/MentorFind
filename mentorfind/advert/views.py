@@ -144,7 +144,7 @@ class AdvertisementEditViewSet(RetrieveUpdateAPIView):
 class ReviewByAdvertisementAPIView(APIView):
     '''Refer to the address advert/review-by-advertisement/id/
     where id is an integer that is the id of the advertisement '''
-    def get(self, advertisement_id):
+    def get(self, request, advertisement_id):
         reviews = Review.objects.filter(advertisement_id=advertisement_id)
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
