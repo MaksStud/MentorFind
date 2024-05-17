@@ -2,7 +2,8 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from .serializers import (CustomUserSerializerRead,
                           CustomUserSerializerEdit,
-                          CustomUserTopSerializer)
+                          CustomUserTopSerializer,
+                          CustomUserSerializerLogin)
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -10,6 +11,8 @@ from .models import CustomUser
 from django.db.models import Avg, Count
 from rest_framework import status
 from rest_framework.authtoken.models import Token
+from advert.models import Advertisement
+
 
 class CustomUserReadViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = CustomUser.objects.all()
@@ -46,7 +49,7 @@ class CustomUserEditViewSet(RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
 
     def update(self, request, *args, **kwargs):
-        token = request.headers.get('Authorization').split(' ')[1]  # Отримуємо токен з заголовку
+        token = request.headers.get('Authorization').split(' ')[1]
 
         try:
             token_obj = Token.objects.get(key=token)
@@ -99,3 +102,15 @@ class TopUsersViewSet(viewsets.ViewSet):
         # Serialize the sorted list of users and return it
         serializer = self.serializer_class(sorted_users, many=True)
         return Response(serializer.data)
+
+class DeleteUserViewSet(viewsets.ViewSet):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def destroy(self, request, *args, **kwargs):
+        user = request.user
+        user_ads = Advertisement.objects.filter(author=user)
+        user_ads.delete()
+        user.delete()
+        return Response({"detail": "User and related ads deleted successfully."},
+                        status=status.HTTP_204_NO_CONTENT)
