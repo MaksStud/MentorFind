@@ -58,6 +58,7 @@ class CustomUserEditViewSet(RetrieveUpdateAPIView):
         serializer = self.get_serializer(user, data=request.data)
         new_username = request.data.get("username", None)
         new_email = request.data.get("email", None)
+        new_photo = request.data.get("photo", None)
         serializer.is_valid(raise_exception=True)
 
         current_password = request.data.get("current_password", None)
@@ -72,6 +73,9 @@ class CustomUserEditViewSet(RetrieveUpdateAPIView):
 
         if new_email is not None:
             user.email = new_email
+
+        if new_photo is not None: 
+            user.photo = new_photo
 
         new_password = request.data.get("password", None)
         if new_password is not None:
