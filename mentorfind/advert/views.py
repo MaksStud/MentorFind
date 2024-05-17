@@ -10,13 +10,14 @@ from django.contrib.auth.models import User
 from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.views import APIView
 from rest_framework import permissions
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
 
 
 
 class AdvertisementViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     queryset = Advertisement.objects.all()
     serializer_class = AdvertisementSerializer
@@ -143,7 +144,7 @@ class AdvertisementEditViewSet(RetrieveUpdateAPIView):
 class ReviewByAdvertisementAPIView(APIView):
     '''Refer to the address advert/review-by-advertisement/id/
     where id is an integer that is the id of the advertisement '''
-    def get(self, advertisement_id):
+    def get(self, request, advertisement_id):
         reviews = Review.objects.filter(advertisement_id=advertisement_id)
         serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
