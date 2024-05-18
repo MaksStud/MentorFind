@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'advert',
     'selected',
     'viewhistory',
+    'message',
     'corsheaders',
     'django_filters',
     'rest_framework',
