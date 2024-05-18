@@ -11,8 +11,7 @@ from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.views import APIView
 from rest_framework import permissions
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-
-
+from rest_framework.exceptions import PermissionDenied
 
 
 class AdvertisementViewSet(viewsets.ModelViewSet):
@@ -62,6 +61,14 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.author != request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        instance.review_set.all().delete()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
