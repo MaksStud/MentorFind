@@ -5,11 +5,11 @@ from users.serializers import CustomUserSerializerRead
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields = ['id', 'teacher', 'student', 'text']
+        fields = ['id', 'receiver', 'sender', 'text']
 
 
 class MessageListSerializer(serializers.ModelSerializer):
-    student = CustomUserSerializerRead()
+    sender = CustomUserSerializerRead()
     class Meta:
         model = Message
-        fields = ['id', 'teacher', 'student', 'text']
+        fields = ['id', 'receiver', 'sender', 'text']

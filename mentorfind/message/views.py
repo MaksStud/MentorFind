@@ -14,9 +14,9 @@ class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
 
     def create(self, request, *args, **kwargs):
-        request.data['student'] = request.user.id
+        request.data['sender'] = request.user.id
         serializer = MessageSerializer(data=request.data)
-        if request.data['student'] == request.data['teacher']:
+        if request.data['sender'] == request.data['receiver']:
             return Response({'error': 'you cannot send a message to yourself'}, status=status.HTTP_400_BAD_REQUEST)
 
         if serializer.is_valid():
@@ -39,8 +39,8 @@ class MessageListViewSet(viewsets.ModelViewSet):
     serializer_class = MessageListSerializer
 
     def list(self, request, *args, **kwargs):
-        teacher = request.user
-        queryset = self.filter_queryset(self.get_queryset().filter(teacher=teacher))
+        receiver = request.user
+        queryset = self.filter_queryset(self.get_queryset().filter(receiver=receiver))
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
