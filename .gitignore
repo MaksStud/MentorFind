@@ -8,7 +8,9 @@ db.sqlite3
 mentorfind/advert/migrations/
 mentorfind/users/migrations/
 mentorfind/main/migrations/
+mentorfind/appointment/migrations
 mentorfind/viewhistory/migrations
 mentorfind/selected/migrations
+mentorfind/message/migrations
 image/
 user_photos/
