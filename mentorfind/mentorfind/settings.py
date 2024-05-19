@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'selected',
     'viewhistory',
     'message',
+    'appointment',
     'corsheaders',
     'django_filters',
     'rest_framework',

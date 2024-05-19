@@ -28,5 +28,6 @@ urlpatterns = [
     path('selected/', include('selected.urls')),
     path('viewhistory/', include('viewhistory.urls')),
     path('message/', include('message.urls')),
+    path('appointment/', include('appointment.urls')),
     path('', include('main.urls'))
 ] + static(MEDIA_URL, document_root=MEDIA_ROOT)
