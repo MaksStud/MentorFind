@@ -15,6 +15,10 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     serializer_class = AppointmentSerializer
 
     def create(self, request, *args, **kwargs):
+
+        def is_already_booked(student, advert):
+            return Appointment.objects.filter(student=student, advert=advert).exists()
+
         student = request.user
         advert_id = request.data.get('advert')
 
@@ -27,6 +31,11 @@ class AppointmentViewSet(viewsets.ModelViewSet):
 
         if student == mentor:
             return Response({"detail": "You cannot create an appointment with yourself as a mentor."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        # Перевірка, чи студент вже записаний на це оголошення
+        if is_already_booked(student, advert):
+            return Response({"detail": "You are already booked for this advertisement."},
                             status=status.HTTP_400_BAD_REQUEST)
 
         appointment_data = {
