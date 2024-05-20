@@ -10,6 +10,6 @@ urlpatterns = [
     path('edit/<int:pk>/', AdvertisementEditViewSet.as_view(), name='edit'),
     path('review-by-advertisement/<int:advertisement_id>/', ReviewByAdvertisementAPIView.as_view(), name='review-by-advertisement'),
     path('get-for-author/', GiveAllUserAdsAway.as_view({'get': 'list'}), name='get'),
-    path('detele/<int:pk>/', AdvertisementViewSet.as_view({'delete': 'destroy'}), name='delete'),
+    path('delete/<int:pk>/', AdvertisementViewSet.as_view({'delete': 'destroy'}), name='delete'),
 ]
 
